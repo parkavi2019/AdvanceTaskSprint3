@@ -1,0 +1,320 @@
+{
+	"info": {
+		"_postman_id": "d29512f3-e89b-45c1-845e-78aa72a91873",
+		"name": "CertificationApl",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40532971"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const loginUrl = 'http://localhost:60968/authentication/authentication/signin';\r",
+							"\r",
+							"\r",
+							"const loginPayload = {\r",
+							"    \"username\": \"manjujayanthi03@gmail.com\",\r",
+							"    \"password\": \"rajesh@manju\"\r",
+							"};\r",
+							"\r",
+							"// Make a request to get the access token\r",
+							"pm.sendRequest({\r",
+							"    url: loginUrl,\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: JSON.stringify(loginPayload)\r",
+							"}, function (err, res) {\r",
+							"    if (err) {\r",
+							"        console.log(\"Login failed\", err);\r",
+							"    } else {\r",
+							"       \r",
+							"        let responseData = res.json();\r",
+							"        let accessToken = responseData.token; \r",
+							"\r",
+							"        \r",
+							"        pm.environment.set(\"accessToken\", accessToken);\r",
+							"\r",
+							"        console.log(\"Token saved:\", accessToken);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Login\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.isSuccess).to.eql(100);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"rememberMe\": false,\r\n  \"email\": \"manjujayanthi03@gmail.com\",\r\n  \"password\": \"rajesh@manju\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/authentication/authentication/signin",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"authentication",
+						"authentication",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddCertificationRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: \"https://example.com/api/auth\",\r",
+							"    method: \"POST\",\r",
+							"    header: { \"Content-Type\": \"application/json\" },\r",
+							"    body: {\r",
+							"        mode: \"raw\",\r",
+							"        raw: JSON.stringify({ username: \"user\", password: \"pass\" })\r",
+							"    }\r",
+							"}, function (err, res) {\r",
+							"    if (err) {\r",
+							"        console.log(\"Request Error:\", err);\r",
+							"    } else if (!res || !res.json) {\r",
+							"        console.log(\"Invalid Response:\", res);\r",
+							"    } else {\r",
+							"        try {\r",
+							"            let jsonResponse = res.json();\r",
+							"            if (jsonResponse.token) {\r",
+							"                pm.globals.set(\"auth_token\", jsonResponse.token);\r",
+							"                console.log(\"Token Saved:\", jsonResponse.token);\r",
+							"            } else {\r",
+							"                console.log(\"Token Not Found in Response:\", jsonResponse);\r",
+							"            }\r",
+							"        } catch (error) {\r",
+							"            console.log(\"JSON Parsing Error:\", error);\r",
+							"        }\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"  \"message\"; \"Certification added successfully\",\r",
+							"  \r",
+							"  \"certificationName\"; \"Java Certification\",\r",
+							"  \"certificationFrom\"; \"ABC Company\",\r",
+							"  \"certificationYear\";\"2012\"\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U2M2I3NjBhMGE0MGVhYzI3YjQ0OTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQzNTkxMjQyLCJleHAiOjE3NDM1OTQ4NDIsInVuaXF1ZV9uYW1lIjoiNjdlNjNiNzYwYTBhNDBlYWMyN2I0NDk5In0.9eSPFJXRQgSShLsl9YoXFUgPHadIZmytu0Na72Ic7Zg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"certificationName\": \"Java Certification\",\r\n  \"certificationFrom\": \"ABC Company\",\r\n  \"certificationYear\": \"2012\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/addCertification",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"addCertification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateCertificateRequest",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U2M2I3NjBhMGE0MGVhYzI3YjQ0OTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQzNTgzMDkyLCJleHAiOjE3NDM1ODY2OTIsInVuaXF1ZV9uYW1lIjoiNjdlNjNiNzYwYTBhNDBlYWMyN2I0NDk5In0.coSJrb3E6JA72rE4W1A4vtRyR5zG_w_FF0cTfzX5uKE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/updateCertification",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"updateCertification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set the API token if needed\r",
+							"pm.request.headers.add({ key: \"Authorization\", value: \"Bearer {{auth_token}}\" });\r",
+							"\r",
+							"// Set a dynamic language ID (replace with your actual logic)\r",
+							"pm.globals.set(\"certification_id\", \"12345\"); // Change to a valid ID or fetch dynamically\r",
+							"\r",
+							"console.log(\"Deleting certification ID:\", pm.globals.get(\"certification_id\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"  \"message\"; \"Certification deleted successfully\",\r",
+							"  \"id\"; \"67ed17ea21609b28485b8330\",\r",
+							"  \"certificationName\"; \"J2EE Certification\",\r",
+							"  \"certificationFrom\"; \"Tata Company\",\r",
+							"  \"certificationYear\"; 2012\r",
+							"    \r",
+							"    \r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U2M2I3NjBhMGE0MGVhYzI3YjQ0OTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQzNTkxMjQyLCJleHAiOjE3NDM1OTQ4NDIsInVuaXF1ZV9uYW1lIjoiNjdlNjNiNzYwYTBhNDBlYWMyN2I0NDk5In0.9eSPFJXRQgSShLsl9YoXFUgPHadIZmytu0Na72Ic7Zg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"67ed17ea21609b28485b8330\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/deleteCertification",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"deleteCertification"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

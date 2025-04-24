@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "da287e29-40c8-4bb4-bb88-91773a521e73",
+		"name": "LanguageApl",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40532971"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"const loginUrl = 'http://localhost:60968/authentication/authentication/signin';\r",
+							"\r",
+							"\r",
+							"const loginPayload = {\r",
+							"    \"username\": \"manjujayanthi03@gmail.com\",\r",
+							"    \"password\": \"rajesh@manju\"\r",
+							"};\r",
+							"\r",
+							"// Make a request to get the access token\r",
+							"pm.sendRequest({\r",
+							"    url: loginUrl,\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: JSON.stringify(loginPayload)\r",
+							"}, function (err, res) {\r",
+							"    if (err) {\r",
+							"        console.log(\"Login failed\", err);\r",
+							"    } else {\r",
+							"       \r",
+							"        let responseData = res.json();\r",
+							"        let accessToken = responseData.token; \r",
+							"\r",
+							"        \r",
+							"        pm.environment.set(\"accessToken\", accessToken);\r",
+							"\r",
+							"        console.log(\"Token saved:\", accessToken);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Login\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.isSuccess).to.eql(100);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"rememberMe\": false,\r\n  \"email\": \"manjujayanthi03@gmail.com\",\r\n  \"password\": \"rajesh@manju\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/authentication/authentication/signin",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"authentication",
+						"authentication",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddLangRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Tamil\",\r\n  \"level\": \"Fluent\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/addLanguage",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"addLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateLangRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjAzODc2NzlkYTJkNjAwMDFjNDg1ZWUiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQyMzc2ODcyLCJleHAiOjE3NDIzODA0NzIsInVuaXF1ZV9uYW1lIjoiNjYwMzg3Njc5ZGEyZDYwMDAxYzQ4NWVlIn0.FYcUG3tCdtsvp8WBs-EjddqeYGFsp_KLanDYJAeaMUA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"676d3bf45d673d0001c59b8d\",\r\n  \"name\": \"English\",\r\n  \"level\": \"Fluent\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:60190/profile/profile/updateLanguage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "60190",
+					"path": [
+						"profile",
+						"profile",
+						"updateLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteLangRequest",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer{{token}}",
+						"type": "text"
+					}
+				]
+			},
+			"response": []
+		}
+	]
+}

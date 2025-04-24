@@ -1,0 +1,358 @@
+{
+	"info": {
+		"_postman_id": "00dfb24c-38f0-48a2-9c6b-74edd0f1009a",
+		"name": "SkillApl",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40532971"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Login\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.isSuccess).to.eql(100);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"const loginUrl = 'http://localhost:60968/authentication/authentication/signin';\r",
+							"\r",
+							"\r",
+							"const loginPayload = {\r",
+							"    \"username\": \"manjujayanthi03@gmail.com\",\r",
+							"    \"password\": \"rajesh@manju\"\r",
+							"};\r",
+							"\r",
+							"// Make a request to get the access token\r",
+							"pm.sendRequest({\r",
+							"    url: loginUrl,\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: JSON.stringify(loginPayload)\r",
+							"}, function (err, res) {\r",
+							"    if (err) {\r",
+							"        console.log(\"Login failed\", err);\r",
+							"    } else {\r",
+							"       \r",
+							"        let responseData = res.json();\r",
+							"        let accessToken = responseData.token; \r",
+							"\r",
+							"        \r",
+							"        pm.environment.set(\"accessToken\", accessToken);\r",
+							"\r",
+							"        console.log(\"Token saved:\", accessToken);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"rememberMe\": false,\r\n  \"email\": \"manjujayanthi03@gmail.com\",\r\n  \"password\": \"rajesh@manju\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/authentication/authentication/signin",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"authentication",
+						"authentication",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddSkill Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: \"https://example.com/api/auth\",\r",
+							"    method: \"POST\",\r",
+							"    header: { \"Content-Type\": \"application/json\" },\r",
+							"    body: {\r",
+							"        mode: \"raw\",\r",
+							"        raw: JSON.stringify({ username: \"user\", password: \"pass\" })\r",
+							"    }\r",
+							"}, function (err, res) {\r",
+							"    if (err) {\r",
+							"        console.log(\"Request Error:\", err);\r",
+							"    } else if (!res || !res.json) {\r",
+							"        console.log(\"Invalid Response:\", res);\r",
+							"    } else {\r",
+							"        try {\r",
+							"            let jsonResponse = res.json();\r",
+							"            if (jsonResponse.token) {\r",
+							"                pm.globals.set(\"auth_token\", jsonResponse.token);\r",
+							"                console.log(\"Token Saved:\", jsonResponse.token);\r",
+							"            } else {\r",
+							"                console.log(\"Token Not Found in Response:\", jsonResponse);\r",
+							"            }\r",
+							"        } catch (error) {\r",
+							"            console.log(\"JSON Parsing Error:\", error);\r",
+							"        }\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"  \"message\"; \"Skill added successfully\",\r",
+							"  \"skill\"; \"C#\",\r",
+							"  \"level\";\"Beginner\"\r",
+							"    \r",
+							"    \r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U2M2I3NjBhMGE0MGVhYzI3YjQ0OTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQzNTgyNDc3LCJleHAiOjE3NDM1ODYwNzcsInVuaXF1ZV9uYW1lIjoiNjdlNjNiNzYwYTBhNDBlYWMyN2I0NDk5In0.47mxd1aMUji-hgJQjduAxtdjmImex3bMsYeo7Fumwi8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"PersonSkillId\": 0,\r\n  \"Skill\": \"C#\",\r\n  \"ExperienceLevel\": \"Beginner\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/addSkill",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"addSkill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateSkillRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"  \"message\"; \"Skill updated successfully\",\r",
+							"  \"skill\"; \"java\",\r",
+							"  \"level\";\"beginner\"\r",
+							"    \r",
+							"    \r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U2M2I3NjBhMGE0MGVhYzI3YjQ0OTkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQzMzMwNTk4LCJleHAiOjE3NDMzMzQxOTgsInVuaXF1ZV9uYW1lIjoiNjdlNjNiNzYwYTBhNDBlYWMyN2I0NDk5In0.gdDFYJx031ysyfGrXsUMUoKrX6OgeEbMLcUu9Nrw_PQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"PersonSkillId\": \"67e920980079840e63097091\",\r\n  \"Skill\": \"Java\",\r\n  \"ExperienceLevel\": \"Beginner\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/updateSkill",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"updateSkill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Skill Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set the API token if needed\r",
+							"pm.request.headers.add({ key: \"Authorization\", value: \"Bearer {{auth_token}}\" });\r",
+							"\r",
+							"// Set a dynamic language ID (replace with your actual logic)\r",
+							"pm.globals.set(\"skill_id\", \"12345\"); // Change to a valid ID or fetch dynamically\r",
+							"\r",
+							"console.log(\"Deleting skill ID:\", pm.globals.get(\"skill_id\"));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"  \"message\"; \"Skill deleted successfully\",\r",
+							"  \"skill\"; \"java\",\r",
+							"  \"level\";\"beginner\"\r",
+							"    \r",
+							"    \r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjAzODc2NzlkYTJkNjAwMDFjNDg1ZWUiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYwOTY4IiwiaWF0IjoxNzQyNDQxMzAwLCJleHAiOjE3NDI0NDQ5MDAsInVuaXF1ZV9uYW1lIjoiNjYwMzg3Njc5ZGEyZDYwMDAxYzQ4NWVlIn0.YHWu0JqV9PTASJmrkZN144ObRcFXDh332C5xmcrVTXc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"PersonSkillId\": \"67ecf1c2fa354a6e2cca3919\",\r\n  \"Skill\": \"java\",\r\n  \"ExperienceLevel\": \"Beginner\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl1}}/profile/profile/deleteSkill",
+					"host": [
+						"{{baseurl1}}"
+					],
+					"path": [
+						"profile",
+						"profile",
+						"deleteSkill"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
